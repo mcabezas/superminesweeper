@@ -6,7 +6,7 @@ using BE;
 
 namespace DAL
 {
-    public class GameDal
+    public class GameDal : IGameDal
     {
         private static GameDal _instance;
 
@@ -55,6 +55,11 @@ namespace DAL
             return gameId;
         }
 
+        public void Update(Game entity)
+        {
+            throw new NotImplementedException();
+        }
+
         public void Delete(int id)
         {
             IDatabase database = Database.Instance();
@@ -67,13 +72,6 @@ namespace DAL
             BuildGameParams(game, out var columns, out var values, out var parameters);
             return (int) database.ExecuteScalar("INSERT INTO GAME(" + columns + ") " +
                 "OUTPUT INSERTED.ID VALUES (" + values + ")", parameters.ToArray(), transaction);
-        }
-        
-        public int InsertGame(Game game, IDatabase database)
-        {
-            BuildGameParams(game, out var columns, out var values, out var parameters);
-            return (int) database.ExecuteScalar("INSERT INTO GAME(" + columns + ") " +
-                "OUTPUT INSERTED.ID VALUES (" + values + ")", parameters.ToArray());
         }
 
         private void BuildGameParams(Game game, out string columns, out string values, out List<SqlParameter> parameters)
@@ -111,16 +109,6 @@ namespace DAL
                 BuildGamePlayersParameters(gameId, player, out var columns, out var values, out var parameters);
                 database.ExecuteNonQuery("INSERT INTO GAME_PLAYER(" + columns + ") " +
                     " VALUES (" + values + ")", parameters.ToArray(), transaction);
-            }
-        }
-        
-        public void InsertGamePlayers(IEnumerable<Player> players, int gameId, IDatabase database)
-        {
-            foreach (var player in players)
-            {
-                BuildGamePlayersParameters(gameId, player, out var columns, out var values, out var parameters);
-                database.ExecuteNonQuery("INSERT INTO GAME_PLAYER(" + columns + ") " +
-                                         " VALUES (" + values + ")", parameters.ToArray());
             }
         }
         

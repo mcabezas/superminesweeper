@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Runtime.CompilerServices;
 using BE;
 
 namespace DAL
 {
-    public class PlayerDal : IDal<int, Player>
+    public class PlayerDal : IPlayerDal
     {
         private static PlayerDal _instance;
 

@@ -6,7 +6,7 @@ using BE;
 
 namespace DAL
 {
-    public class ArenaDal : IDal<int, Arena>
+    public class ArenaDal : IArenaDal
     {
         private static ArenaDal _instance;
 
@@ -56,13 +56,6 @@ namespace DAL
                 return -1;
             }
         }
-
-        public static int InsertArena(Arena arena, string columns, string values, IDatabase database)
-        {
-            var parameters = BuildArenaParameters(arena, ref columns, ref values);
-            return (int) database.ExecuteScalar("INSERT INTO ARENA(" + columns + ") " +
-                "OUTPUT INSERTED.ID VALUES (" + values + ")", parameters.ToArray());
-        }
         
         public static int InsertArena(Arena arena, string columns, string values, IDatabase database, SqlTransaction transaction)
         {
@@ -92,16 +85,6 @@ namespace DAL
                 BuildDiscoveredParameters(arenaId, cell, out var columns, out var values, out var parameters);
                 database.ExecuteNonQuery("INSERT INTO ARENA_CELL(" + columns + ") " +
                     " VALUES (" + values + ")", parameters.ToArray(), transaction);
-            }
-        }
-        
-        public void InsertCell(IEnumerable<Cell> cells, int arenaId, IDatabase database)
-        {
-            foreach (var cell in cells)
-            {
-                BuildDiscoveredParameters(arenaId, cell, out var columns, out var values, out var parameters);
-                database.ExecuteNonQuery("INSERT INTO ARENA_CELL(" + columns + ") " +
-                                         " VALUES (" + values + ")", parameters.ToArray());
             }
         }
         

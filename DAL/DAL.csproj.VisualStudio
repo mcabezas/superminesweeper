@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>DAL</RootNamespace>
     <AssemblyName>DAL</AssemblyName>
-    <TargetFrameworkVersion>3.0.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -40,11 +40,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="scripts/schema.sql" />
     <Compile Include="Database.cs" />
-    <Compile Include="Game.cs" />
     <Compile Include="IDatabase.cs" />
-    <Compile Include="IGame.cs" />
     <Compile Include="IDal.cs" />
+    <Compile Include="IArenaDal.cs" />
+    <Compile Include="ArenaDal.cs" />
+    <Compile Include="ArenaMapper.cs" />
+    <Compile Include="IPlayerDal.cs" />
+    <Compile Include="PlayerDal.cs" />
+    <Compile Include="PlayerMapper.cs" />
+    <Compile Include="IGameDal.cs" />
+    <Compile Include="GameDal.cs" />
+    <Compile Include="GameMapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -52,9 +60,6 @@
       <Project>{4af01446-c85b-4aa9-970c-6011173ac9b8}</Project>
       <Name>BE</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="scripts\schema.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
