@@ -41,8 +41,8 @@ namespace DAL
             var gameId = -1;
             try
             {
-                gameId = InsertGame(game, database, transaction);
-                InsertGamePlayers(game.Players, gameId, database, transaction);
+                gameId = InsertGameTable(game, database, transaction);
+                InsertGamePlayerTable(game.Players, gameId, database, transaction);
                 transaction.Commit();
                 Console.WriteLine("Game [" + gameId +"] successfully persisted.");
             }
@@ -55,19 +55,75 @@ namespace DAL
             return gameId;
         }
 
-        public void Update(Game entity)
+        public void Update(Game game)
         {
-            throw new NotImplementedException();
+            IDatabase database = Database.Instance();
+
+            var transaction = database.BeginTransaction();
+            try
+            {
+                UpdateGameTable(game, database, transaction);
+                UpdateGamePlayerTable(game.Players, game.Id, database, transaction);
+                transaction.Commit();
+                Console.WriteLine("Game [" + game.Id +"] successfully updated.");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("There was an issue updating Game: " + e.Message);
+                transaction.Rollback();
+            }
+        }
+        
+        public void UpdateGameTable(Game game, IDatabase database, SqlTransaction transaction)
+        {
+            var parameters = new List<SqlParameter>();
+
+            parameters.Add(new SqlParameter("@ID", game.Id));
+            parameters.Add(new SqlParameter("@NEXT_MOVE", game.NextMove.Id));
+            parameters.Add(new SqlParameter("@STARTING_DATE", game.StartingDate));
+
+            parameters.Add(game.EndingDate != null
+                ? new SqlParameter("@ENDING_DATE", game.EndingDate)
+                : new SqlParameter("@ENDING_DATE", DBNull.Value));
+            
+            parameters.Add(game.Winner != null
+                ? new SqlParameter("@WINNER", game.Winner.Id)
+                : new SqlParameter("@WINNER", DBNull.Value));
+
+            parameters.Add(game.Arena != null
+                ? new SqlParameter("@ARENA_ID", game.Arena.Id)
+                : new SqlParameter("@ARENA_ID", DBNull.Value));
+
+            database.ExecuteNonQuery("UPDATE GAME SET WINNER=@WINNER" + 
+                                     " , NEXT_MOVE=@NEXT_MOVE, STARTING_DATE=@STARTING_DATE, ENDING_DATE=@ENDING_DATE, ARENA_ID=@ARENA_ID" + 
+                                     " WHERE ID=@ID", 
+                parameters.ToArray(), transaction);
+        }
+
+        public void UpdateGamePlayerTable(IEnumerable<Player> players, int gameId, IDatabase database, SqlTransaction transaction)
+        {
+            DeleteGamePlayerTable(gameId, database, transaction);
+            InsertGamePlayerTable(players, gameId, database, transaction);
+        }
+
+        private static void DeleteGamePlayerTable(int gameId, IDatabase database, SqlTransaction transaction)
+        {
+            database.ExecuteNonQuery("DELETE GAME_PLAYER WHERE GAME_ID=@ID",
+                new List<SqlParameter> {new SqlParameter("@ID", gameId)}.ToArray(), transaction);
         }
 
         public void Delete(int id)
         {
             IDatabase database = Database.Instance();
+            
+            database.ExecuteNonQuery("DELETE GAME_PLAYER WHERE GAME_ID=@ID", 
+                new List<SqlParameter> {new SqlParameter("@ID", id)}.ToArray());
+
             database.ExecuteNonQuery("DELETE GAME WHERE ID=@ID", 
                 new List<SqlParameter> {new SqlParameter("@ID", id)}.ToArray());
         }
 
-        public int InsertGame(Game game, IDatabase database, SqlTransaction transaction)
+        public int InsertGameTable(Game game, IDatabase database, SqlTransaction transaction)
         {
             BuildGameParams(game, out var columns, out var values, out var parameters);
             return (int) database.ExecuteScalar("INSERT INTO GAME(" + columns + ") " +
@@ -92,17 +148,16 @@ namespace DAL
                 values += ",@ARENA_ID";
             }
 
-            var player1 = game.Players.GetEnumerator().Current;
-            if (player1 != null)
+            if (game.NextMove != null)
             {
-                parameters.Add(new SqlParameter("@NEXT_MOVE", player1.Id));
+                parameters.Add(new SqlParameter("@NEXT_MOVE", game.NextMove.Id));
                 columns += ",NEXT_MOVE";
                 values += ",@NEXT_MOVE";
             }
 
         }
         
-        public void InsertGamePlayers(IEnumerable<Player> players, int gameId, IDatabase database, SqlTransaction transaction)
+        public void InsertGamePlayerTable(IEnumerable<Player> players, int gameId, IDatabase database, SqlTransaction transaction)
         {
             foreach (var player in players)
             {

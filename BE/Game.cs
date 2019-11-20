@@ -20,7 +20,7 @@ namespace BE
 
         public DateTime StartingDate { get; set; }
         
-        public DateTime EndingDate { get; set; }
+        public DateTime? EndingDate { get; set; }
         
         public Arena Arena { get; set; }
     }

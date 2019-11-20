@@ -12,6 +12,12 @@ namespace DAL
             foreach (DataRow row in gameDs.Tables[0].Rows)
             {
                 game.Id = int.Parse(row["id"].ToString());
+                
+                if (row["arena_id"].ToString() != "")
+                {
+                    game.Arena = new Arena{Id = int.Parse(row["arena_id"].ToString())};
+                }
+
                 if (row["winner"].ToString() != "")
                 {
                     game.Winner = new Player {Id = int.Parse(row["winner"].ToString())};

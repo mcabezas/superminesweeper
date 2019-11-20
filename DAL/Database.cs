@@ -7,7 +7,7 @@ namespace DAL
     public class Database : IDatabase
     {
         private readonly SqlConnection sqlConnection;
-        public const string LocalDatabase = "Server=localhost;Database=master;User Id=sa;Password=2053Pega;";
+        public const string LocalDatabase = "Server=localhost;Database=master;User Id=sa;Password=xxxxx;";
 
         private Database(string connectionString)
         {
