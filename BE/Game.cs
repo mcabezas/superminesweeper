@@ -1,35 +1,27 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 
-namespace Model
+namespace BE
 {
     public class Game
     {
-        private long id;
-
-        public long Id
+        public Game()
         {
-            get { return id; }
-            set { id = value; }
+            Players = new List<Player>();
         }
+        
+        public int Id { get; set; }
 
-        private IEnumerable<Player> players;
+        public List<Player> Players { get; set; }
+        
+        public Player Winner { get; set; }
 
-        public IEnumerable<Player> Players
-        {
-            get { return players; }
-            set { players = value; }
-        }
+        public Player NextMove { get; set; }
 
-        private Arena arena;
-
-        public Arena Arena
-       {
-            get { return arena; }
-            set { arena = value; }
-        }
-
-
+        public DateTime StartingDate { get; set; }
+        
+        public DateTime EndingDate { get; set; }
+        
+        public Arena Arena { get; set; }
     }
 }

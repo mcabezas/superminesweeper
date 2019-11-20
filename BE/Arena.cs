@@ -1,42 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
-namespace Model
+namespace BE
 {
     public class Arena
     {
-        private long id;
-
-        public long Id
+        public Arena()
         {
-            get { return id; }
-            set { id = value; }
+            Cells = new List<Cell>();
         }
 
-        private int wheight;
+        public int Id { get; set; }
 
-        public int Wheight
-        {
-            get { return wheight; }
-            set { wheight = value; }
-        }
+        public int Weight { get; set; }
 
-        private int hight;
-
-        public int Hight
-        {
-            get { return hight; }
-            set { hight = value; }
-        }
-
-        private Dictionary<Position, Player> mines;
-
-        public Dictionary<Position, Player> Mines
-        {
-            get { return mines; }
-            set { mines = value; }
-        }
+        public int Height { get; set; }
+        
+        public List<Cell> Cells { get; set; }
 
     }
 }
