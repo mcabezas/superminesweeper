@@ -17,7 +17,7 @@
 
         public bool IsMine { get; set; }
         
-        public bool NearMines { get; set; }
+        public int NearMines { get; set; }
 
         public Player Player { get; set; }
 

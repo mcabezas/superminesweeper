@@ -29,7 +29,7 @@ namespace DAL
             return arena;
         }
         
-        public static Cell ToCelEntity(DataSet cellDs)
+        public static Cell ToCelEntity(DataSet cellDs, DataSet nearMinesDs)
         {
             var cell = new Cell();
             foreach (DataRow row in cellDs.Tables[0].Rows)
@@ -39,6 +39,11 @@ namespace DAL
                     cell.Player = new Player {Id = int.Parse(row["player_id"].ToString())};
                 }
                 cell.IsMine = row["is_mine"].ToString() == "1";
+            }
+
+            foreach (DataRow row in nearMinesDs.Tables[0].Rows)
+            {
+                cell.NearMines = int.Parse(row["near_mines"].ToString());
             }
 
             return cell;

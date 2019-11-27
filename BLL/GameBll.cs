@@ -73,7 +73,7 @@ namespace BLL
             
             gameDal.Update(game);
             
-            return new ActionResponse{HasMine = cell.IsMine, NextMove = game.NextMove.Id};
+            return new ActionResponse{HasMine = cell.IsMine, NextMove = game.NextMove.Id, NearMines = cell.NearMines};
         }
 
         private Player GetNextPlayer(Player currentPlayer, List<Player> players)
