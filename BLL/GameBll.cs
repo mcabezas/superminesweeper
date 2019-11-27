@@ -15,8 +15,15 @@ namespace BLL
         [MethodImpl(MethodImplOptions.Synchronized)]
         public static GameBll Instance()
         {
-            return _instance ??= new GameBll();
-        }
+        {
+            if (_instance != null)
+            {
+                return _instance;
+            }
+
+            _instance = new GameBll();
+            return _instance;
+        }        }
 
         private GameBll()
         {
@@ -26,7 +33,10 @@ namespace BLL
 
         public Game FindById(int id)
         {
-            return gameDal.FindById(id);
+            var game = gameDal.FindById(id);
+
+            game.Arena = arenaDal.FindById(game.Arena.Id);
+            return game;
         }
 
         public int CreateGame(List<Player> players)
@@ -51,54 +61,35 @@ namespace BLL
                 return new ActionResponse { ErrorMessage = "Position Y is out of boundaries!"};
             }
 
-            var cell = FindCell(action.PositionX, action.PositionY, game.Arena);
+            var cellPos = FindCell(action.PositionX, action.PositionY, game.Arena);
 
-            if (cell == null)
-            {
-                return new ActionResponse { ErrorMessage = "Cell does not exist!"};
-            }
-
-            if (cell.Player != null)
+            if (game.Arena.Cells[cellPos].Player != null)
             {
                 return new ActionResponse { ErrorMessage = "Cell is already revealed!"};
             }
-            
-            //Push Cell
-            PressCell(cell, game.Arena, game.NextMove);
-            
+
+            game.Arena.Cells[cellPos].Player = game.NextMove;
+
+
             game.NextMove = GetNextPlayer(game.NextMove, game.Players);
             
             arenaDal.Update(game.Arena);
             gameDal.Update(game);
             
-            return new ActionResponse{HasMine = cell.IsMine, NextMove = game.NextMove.Id};
+            return new ActionResponse{HasMine = game.Arena.Cells[cellPos].IsMine, NextMove = game.NextMove.Id};
         }
 
-        private Cell FindCell(int positionX, int positionY, Arena arena)
+        private int FindCell(int positionX, int positionY, Arena arena)
         {
-            foreach (var current in arena.Cells)
+            for(int i=0; i < arena.Cells.Count; i++)
             {
-                if (current.PositionX == positionX
-                    && current.PositionY == positionY)
+                if (arena.Cells[i].PositionX == positionX
+                    && arena.Cells[i].PositionY == positionY)
                 {
-                    return current;
+                    return i;
                 }
             }
-
-            return null;
-        }
-        
-        private void PressCell(Cell toBePushed, Arena arena, Player player)
-        {
-            var enumerator = arena.Cells.GetEnumerator();
-            while(enumerator.MoveNext())
-            {
-                if (enumerator.Current.PositionX == toBePushed.PositionX
-                    && enumerator.Current.PositionY == toBePushed.PositionY)
-                {
-                    enumerator.Current.Player = player;
-                }
-            }
+            return 0;
         }
 
         private Player GetNextPlayer(Player currentPlayer, List<Player> players)

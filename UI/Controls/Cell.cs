@@ -6,6 +6,7 @@ using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using UI;
 
 namespace Minesweeper.Controls
 {
@@ -14,14 +15,17 @@ namespace Minesweeper.Controls
         private bool flagged = false;
         private readonly int row;
         private readonly int column;
-        private readonly bool hasMine;
+        private readonly int gameId;
+        private RootController controller;
+
         private Graphics graphics;
 
-        public Cell(int row, int column, bool hasMine, Point location, Size size)
+        public Cell(RootController controller, int row, int column, int gameId, Point location, Size size)
         {
+            this.controller = controller;
             this.row = row;
             this.column = column;
-            this.hasMine = hasMine;
+            this.gameId = gameId;
             this.Location = location;
             this.Size = size;
             this.Visible = true;
@@ -49,8 +53,12 @@ namespace Minesweeper.Controls
             if (e.Button == MouseButtons.Right) {
                 MessageBox.Show($"Right click on Row[{row}] Column[{column}]" );
             }
-
             Graphics graphics = this.CreateGraphics();
+            var result = controller.PressCell(gameId, column, row);
+            if (result.HasMine) {
+                graphics.DrawImage(ImageResource.GetReveledMineSquare(this.Size), 0, 0);
+                return;
+            }
             graphics.DrawImage(ImageResource.GetReveledBlankSquare(this.Size), 0, 0);
         }
 

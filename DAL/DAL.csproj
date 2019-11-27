@@ -40,14 +40,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="scripts/schema.sql" />
     <Compile Include="Database.cs" />
     <Compile Include="IDatabase.cs" />
     <Compile Include="IDal.cs" />
+    <Compile Include="IArenaDal.cs" />
     <Compile Include="ArenaDal.cs" />
     <Compile Include="ArenaMapper.cs" />
+    <Compile Include="IPlayerDal.cs" />
     <Compile Include="PlayerDal.cs" />
     <Compile Include="PlayerMapper.cs" />
+    <Compile Include="IGameDal.cs" />
     <Compile Include="GameDal.cs" />
     <Compile Include="GameMapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -57,6 +59,12 @@
       <Project>{4af01446-c85b-4aa9-970c-6011173ac9b8}</Project>
       <Name>BE</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="schema.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="scripts\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

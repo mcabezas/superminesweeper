@@ -7,7 +7,7 @@ namespace DAL
     public class Database : IDatabase
     {
         private readonly SqlConnection sqlConnection;
-        public const string LocalDatabase = "Server=localhost;Database=master;User Id=sa;Password=xxxxx;";
+        public const string LocalDatabase = "Server=192.168.1.98;Database=master;User Id=sa;Password=2053Pega;";
 
         private Database(string connectionString)
         {
@@ -20,7 +20,13 @@ namespace DAL
         [MethodImpl(MethodImplOptions.Synchronized)]
         public static Database Instance()
         {
-            return _instance ??= new Database(LocalDatabase);
+            if (_instance != null)
+            {
+                return _instance;
+            }
+
+            _instance = new Database(LocalDatabase);
+            return _instance;
         }
 
 

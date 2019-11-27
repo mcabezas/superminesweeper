@@ -8,6 +8,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using BE;
+using BLL;
 
 namespace UI
 {
@@ -15,11 +17,15 @@ namespace UI
     {
         private ArenaView arenaView;
 
-        public RootForm()
+        public RootForm(RootController controller)
         {
             InitializeComponent();
-            ArenaView arenaView = new ArenaView();
+            var players = controller.CreateDefaultPlayers();
+            var gameID = GameBll.Instance().CreateGame(players);
+            var game = GameBll.Instance().FindById(gameID);
+            ArenaView arenaView = new ArenaView(controller, game, players);
             this.Controls.Add(arenaView);
         }
+
     }
 }

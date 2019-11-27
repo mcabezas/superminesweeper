@@ -5,24 +5,27 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using UI;
 
 namespace Minesweeper.Layer
 {
     internal class ArenaBoardLayer : UserControl
     {
         private int cellWeight = 20;
-        private int cellHight = 20;
+        private int cellHeight = 20;
         private int rows;
         private int columns;
         private Cell[,] cells;
+        private RootController controller;
 
-        public ArenaBoardLayer(int rows, int columns)
+        public ArenaBoardLayer(RootController controller, BE.Game game)
         {
+            this.controller = controller;
+            this.rows = game.Arena.Height;
+            this.columns = game.Arena.Weight;
             this.cells = new Cell[rows, columns];
-            this.rows = rows;
-            this.columns = columns;
             this.Location = new Point(200, 200);
-            this.Size = new Size(columns * cellWeight, rows * cellHight);
+            this.Size = new Size(columns * cellWeight, rows * cellHeight);
             this.Visible = true;
 
             for (int rowIndex = 0; rowIndex < rows; rowIndex++)
@@ -30,17 +33,17 @@ namespace Minesweeper.Layer
                 for (int columnIndex = 0; columnIndex < columns; columnIndex++)
                 {
                     int positionX = (columnIndex * cellWeight);
-                    int positionY = (rowIndex * cellHight);
+                    int positionY = (rowIndex * cellHeight);
 
                     cells[rowIndex, columnIndex] = new Cell(
-                        rowIndex, columnIndex, false,
+                        controller,
+                        rowIndex, columnIndex, game.Id,
                         new Point( positionX , positionY),
-                        new Size(cellWeight, cellHight));
+                        new Size(cellWeight, cellHeight));
 
                     this.Controls.Add(cells[rowIndex, columnIndex]);
                 }
             }
         }
-
     }
 }

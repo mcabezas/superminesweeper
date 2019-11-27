@@ -20,6 +20,12 @@ namespace Minesweeper.Resources
                 size);
         }
 
+        public static Image GetReveledMineSquare(Size size)
+        {
+            return GetImage(@"Resources\\Images\\ReveledMine.PNG",
+                size);
+        }
+
         private static Image GetImage(string imagePath, Size size)
         {
             Image rawImage = new Bitmap(imagePath);
