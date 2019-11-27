@@ -17,7 +17,15 @@ namespace DAL
         [MethodImpl(MethodImplOptions.Synchronized)]
         public static GameDal Instance()
         {
-            return _instance ??= new GameDal();
+            {
+                if (_instance != null)
+                {
+                    return _instance;
+                }
+
+                _instance = new GameDal();
+                return _instance;
+            }
         }
 
         public Game FindById(int id)

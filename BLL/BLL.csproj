@@ -40,7 +40,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
+    <Compile Include="ActionRequest.cs" />
+    <Compile Include="ActionResponse.cs" />
+    <Compile Include="ArenaFactory.cs" />
+    <Compile Include="IPlayer.cs" />
+    <Compile Include="PlayerBll.cs" />
+    <Compile Include="GameBll.cs" />
+    <Compile Include="GameFactory.cs" />
+    <Compile Include="IGame.cs" />
+    <Compile Include="Predefined.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

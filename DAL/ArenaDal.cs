@@ -17,7 +17,12 @@ namespace DAL
         [MethodImpl(MethodImplOptions.Synchronized)]
         public static ArenaDal Instance()
         {
-            return _instance ??= new ArenaDal();
+            if (_instance != null) {
+                return _instance;
+            }
+
+            _instance = new ArenaDal();
+            return _instance;
         }
 
         public Arena FindById(int id)

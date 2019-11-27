@@ -16,7 +16,15 @@ namespace DAL
         [MethodImpl(MethodImplOptions.Synchronized)]
         public static PlayerDal Instance()
         {
-            return _instance ??= new PlayerDal();
+            {
+                if (_instance != null)
+                {
+                    return _instance;
+                }
+
+                _instance = new PlayerDal();
+                return _instance;
+            }
         }
 
         public Player FindById(int id)

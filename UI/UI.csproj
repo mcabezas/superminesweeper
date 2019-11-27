@@ -55,6 +55,7 @@
     <Compile Include="Controls\Layers\ArenaBoardLayer.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="RootController.cs" />
     <Compile Include="Resources\ImageResource.cs" />
     <Compile Include="RootForm.cs">
       <SubType>Form</SubType>

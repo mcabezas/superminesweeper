@@ -4,10 +4,11 @@ namespace BLL
 {
     public class Predefined
     {
+        private static readonly Random random = new Random();
+
         public static int RandomInt(int min, int max)
         {
-            var rnd = new Random();
-            return rnd.Next(min, max);
+            return random.Next(min, max);
         }
 
     }
