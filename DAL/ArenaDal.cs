@@ -35,7 +35,7 @@ namespace DAL
             var cellParameters = new List<SqlParameter> {new SqlParameter("@ID", id)};
             var cellsDs = database.ExecuteQuery(@"SELECT * from ARENA_CELL WHERE ARENA_ID = @ID", cellParameters.ToArray());
             
-            return ArenaMapper.ToEntity(arenaDs, cellsDs);
+            return ArenaMapper.ToArenaEntity(arenaDs, cellsDs);
         }
         
         public int Create(Arena arena)
@@ -196,6 +196,37 @@ namespace DAL
             };
             database.ExecuteNonQuery("DELETE ARENA WHERE ID = @ID"
                 , parameters.ToArray(), transaction);
+        }
+
+        public Cell GetCell(int arenaId, int positionX, int positionY)
+        {
+            IDatabase database = Database.Instance();
+            var parameters = new List<SqlParameter> {
+                new SqlParameter("@ARENA_ID", arenaId),
+                new SqlParameter("@POSITION_X", positionX),
+                new SqlParameter("@POSITION_Y", positionY),
+            };
+            var cell = ArenaMapper.ToCelEntity(
+                database.ExecuteQuery(
+                    "SELECT PLAYER_ID, IS_MINE FROM ARENA_CELL WHERE ARENA_ID=@ARENA_ID AND POSITION_X=@POSITION_X AND POSITION_Y=@POSITION_Y", 
+                parameters.ToArray()));
+
+            return cell;
+        }
+
+        public void UpdateCellPlayer(int arenaId, int positionX, int positionY, int playerId)
+        {
+            IDatabase database = Database.Instance();
+
+            var parameters = new List<SqlParameter> {
+                new SqlParameter("@PLAYER_ID", playerId),
+                new SqlParameter("@ARENA_ID", arenaId),
+                new SqlParameter("@POSITION_X", positionX),
+                new SqlParameter("@POSITION_Y", positionY),
+            };
+            
+            database.ExecuteNonQuery("UPDATE ARENA_CELL SET PLAYER_ID=@PLAYER_ID WHERE ARENA_ID=@ARENA_ID AND POSITION_X=@POSITION_X AND POSITION_Y=@POSITION_Y", 
+                parameters.ToArray());
         }
     }
 }

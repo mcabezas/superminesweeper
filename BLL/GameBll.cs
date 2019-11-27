@@ -49,7 +49,6 @@ namespace BLL
         public ActionResponse PressCell(ActionRequest action)
         {
             var game = gameDal.FindById(action.GameId);
-            game.Arena = arenaDal.FindById(game.Arena.Id);
             
             if (action.PositionX < 1 && action.PositionX > game.Arena.Height)
             {
@@ -61,37 +60,23 @@ namespace BLL
                 return new ActionResponse { ErrorMessage = "Position Y is out of boundaries!"};
             }
 
-            var cellPos = FindCell(action.PositionX, action.PositionY, game.Arena);
+            var cell = arenaDal.GetCell(game.Arena.Id, action.PositionX, action.PositionY);
 
-            if (game.Arena.Cells[cellPos].Player != null)
+            if (cell.Player != null)
             {
                 return new ActionResponse { ErrorMessage = "Cell is already revealed!"};
             }
 
-            game.Arena.Cells[cellPos].Player = game.NextMove;
-
+            arenaDal.UpdateCellPlayer(game.Arena.Id, action.PositionX, action.PositionY, game.NextMove.Id);
 
             game.NextMove = GetNextPlayer(game.NextMove, game.Players);
             
             arenaDal.Update(game.Arena);
             gameDal.Update(game);
             
-            return new ActionResponse{HasMine = game.Arena.Cells[cellPos].IsMine, NextMove = game.NextMove.Id};
+            return new ActionResponse{HasMine = cell.IsMine, NextMove = game.NextMove.Id};
         }
-
-        private int FindCell(int positionX, int positionY, Arena arena)
-        {
-            for(int i=0; i < arena.Cells.Count; i++)
-            {
-                if (arena.Cells[i].PositionX == positionX
-                    && arena.Cells[i].PositionY == positionY)
-                {
-                    return i;
-                }
-            }
-            return 0;
-        }
-
+        
         private Player GetNextPlayer(Player currentPlayer, List<Player> players)
         {
             foreach (var player in players)

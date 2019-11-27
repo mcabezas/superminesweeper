@@ -17,6 +17,8 @@
 
         public bool IsMine { get; set; }
         
+        public bool NearMines { get; set; }
+
         public Player Player { get; set; }
 
         private bool Equals(Cell other)
