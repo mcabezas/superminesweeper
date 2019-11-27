@@ -5,7 +5,7 @@ namespace DAL
 {
     public static class ArenaMapper
     {
-        public static Arena ToEntity(DataSet arenaDs, DataSet cellsDs)
+        public static Arena ToArenaEntity(DataSet arenaDs, DataSet cellsDs)
         {
             var arena = new Arena();
             foreach (DataRow row in arenaDs.Tables[0].Rows)
@@ -27,6 +27,21 @@ namespace DAL
             }
 
             return arena;
+        }
+        
+        public static Cell ToCelEntity(DataSet cellDs)
+        {
+            var cell = new Cell();
+            foreach (DataRow row in cellDs.Tables[0].Rows)
+            {
+                if (row["player_id"].ToString() != "")
+                {
+                    cell.Player = new Player {Id = int.Parse(row["player_id"].ToString())};
+                }
+                cell.IsMine = row["is_mine"].ToString() == "1";
+            }
+
+            return cell;
         }
     }
 }

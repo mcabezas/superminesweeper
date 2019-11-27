@@ -3,6 +3,7 @@ namespace BLL
     public class ActionResponse
     {
         public bool HasMine { get; set; }
+        public int NearMines { get; set; }
         public int NextMove { get; set; }
         public int Winner { get; set; }
         public int ErrorCode { get; set; }
