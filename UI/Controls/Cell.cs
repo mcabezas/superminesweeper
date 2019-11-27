@@ -55,6 +55,9 @@ namespace Minesweeper.Controls
             }
             Graphics graphics = this.CreateGraphics();
             var result = controller.PressCell(gameId, column, row);
+
+            if (result.ErrorMessage != null) return;
+
             if (result.HasMine) {
                 graphics.DrawImage(ImageResource.GetReveledMineSquare(this.Size), 0, 0);
                 return;

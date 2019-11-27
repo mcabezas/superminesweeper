@@ -216,8 +216,16 @@ namespace DAL
                 new SqlParameter("@POSITION_Y", positionY),
             };
 
-            var sqlStatement = "select count(*) as near_mines from ARENA_CELL where ARENA_ID=@ARENA_ID AND IS_MINE=1 and ( (POSITION_X=(@POSITION_X -1) AND POSITION_Y=@POSITION_Y) OR (POSITION_X=(@POSITION_X +1) AND POSITION_Y=@POSITION_Y) OR (POSITION_X=@POSITION_X AND POSITION_Y=(@POSITION_Y +1)) OR (POSITION_X=@POSITION_X AND POSITION_Y=(@POSITION_Y +1)) OR (POSITION_X=(@POSITION_X +1) AND POSITION_Y=(@POSITION_Y +1)) OR (POSITION_X=(@POSITION_X -1) AND POSITION_Y=(@POSITION_Y -1)) OR (POSITION_X=(@POSITION_X +1) AND POSITION_Y=(@POSITION_Y -1)) OR (POSITION_X=(@POSITION_X -1) AND POSITION_Y=(@POSITION_Y +1)) )";
-            var nearMinesDS = database.ExecuteQuery(sqlStatement, parameters2.ToArray());
+            var nearMinesCounterStatement = "select count(*) as near_mines from ARENA_CELL where ARENA_ID=@ARENA_ID and " +
+                "( (POSITION_X=(@POSITION_X -1) AND POSITION_Y=@POSITION_Y AND IS_MINE=1) OR " +
+                "(POSITION_X=(@POSITION_X +1) AND POSITION_Y=@POSITION_Y AND IS_MINE=1) OR " +
+                "(POSITION_X=@POSITION_X AND POSITION_Y=(@POSITION_Y +1) AND IS_MINE=1) OR " +
+                "(POSITION_X=@POSITION_X AND POSITION_Y=(@POSITION_Y -1) AND IS_MINE=1) OR " +
+                "(POSITION_X=(@POSITION_X +1) AND POSITION_Y=(@POSITION_Y +1) AND IS_MINE=1) OR " +
+                "(POSITION_X=(@POSITION_X -1) AND POSITION_Y=(@POSITION_Y -1) AND IS_MINE=1) OR " +
+                "(POSITION_X=(@POSITION_X +1) AND POSITION_Y=(@POSITION_Y -1) AND IS_MINE=1) OR " +
+                "(POSITION_X=(@POSITION_X -1) AND POSITION_Y=(@POSITION_Y +1) AND IS_MINE=1) )";
+            var nearMinesDS = database.ExecuteQuery(nearMinesCounterStatement, parameters2.ToArray());
 
             var cell = ArenaMapper.ToCelEntity(commonData, nearMinesDS);
 
