@@ -60,6 +60,11 @@ namespace Minesweeper.Controls
                 return;
             }
             graphics.DrawImage(ImageResource.GetReveledBlankSquare(this.Size), 0, 0);
+            using (Font arialFont = new Font("Arial", 10))
+            {
+                PointF location = new PointF(5f, 2.5f);
+                graphics.DrawString(result.NearMines.ToString(), arialFont, Brushes.Blue, location);
+            }
         }
 
     }
