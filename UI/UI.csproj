@@ -49,6 +49,9 @@
     <Compile Include="Controls\Cell.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="Controls\Layers\ArenaDashboardLayer.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Controls\Layers\ArenaBackgroundLayer.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -68,6 +71,9 @@
     <Compile Include="Views\ArenaView.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <EmbeddedResource Include="Controls\Layers\ArenaDashboardLayer.resx">
+      <DependentUpon>ArenaDashboardLayer.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -77,6 +83,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="RootForm.resx">
+      <DependentUpon>RootForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Views\ArenaView.resx">
       <DependentUpon>ArenaView.cs</DependentUpon>
     </EmbeddedResource>

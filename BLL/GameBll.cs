@@ -11,6 +11,7 @@ namespace BLL
         private static GameBll _instance;
         private readonly GameDal gameDal;
         private readonly ArenaDal arenaDal;
+        private readonly PlayerDal playerDal;
 
         [MethodImpl(MethodImplOptions.Synchronized)]
         public static GameBll Instance()
@@ -29,6 +30,7 @@ namespace BLL
         {
             gameDal = GameDal.Instance();
             arenaDal = ArenaDal.Instance();
+            playerDal = PlayerDal.Instance();
         }
 
         public Game FindById(int id)
@@ -69,11 +71,16 @@ namespace BLL
 
             arenaDal.UpdateCellPlayer(game.Arena.Id, action.PositionX, action.PositionY, game.NextMove.Id);
 
-            game.NextMove = GetNextPlayer(game.NextMove, game.Players);
-            
+            if(!cell.IsMine)
+            {
+                game.NextMove = GetNextPlayer(game.NextMove, game.Players);
+            }
+
             gameDal.Update(game);
+
+            var nextPlayer = playerDal.FindById(game.NextMove.Id);
             
-            return new ActionResponse{HasMine = cell.IsMine, NextMove = game.NextMove.Id, NearMines = cell.NearMines};
+            return new ActionResponse{HasMine = cell.IsMine, NextMove = nextPlayer.Id, NextMoveName = nextPlayer.NickName, NearMines = cell.NearMines};
         }
 
         private Player GetNextPlayer(Player currentPlayer, List<Player> players)

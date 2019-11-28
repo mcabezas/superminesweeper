@@ -18,13 +18,13 @@ namespace Minesweeper.Layer
         private Cell[,] cells;
         private RootController controller;
 
-        public ArenaBoardLayer(RootController controller, BE.Game game)
+        public ArenaBoardLayer(ArenaDashboardLayer dashboard, RootController controller, BE.Game game)
         {
             this.controller = controller;
             this.rows = game.Arena.Height;
             this.columns = game.Arena.Weight;
             this.cells = new Cell[rows, columns];
-            this.Location = new Point(200, 200);
+            this.Location = new Point(200, 300);
             this.Size = new Size(columns * cellWeight, rows * cellHeight);
             this.Visible = true;
 
@@ -40,7 +40,7 @@ namespace Minesweeper.Layer
                         rowIndex, columnIndex, game.Id,
                         new Point( positionX , positionY),
                         new Size(cellWeight, cellHeight));
-
+                    cells[rowIndex, columnIndex].PressCell += dashboard.OnPressCell;
                     this.Controls.Add(cells[rowIndex, columnIndex]);
                 }
             }

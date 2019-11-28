@@ -15,13 +15,17 @@ namespace Minesweeper.Views
     {
         private Control background;
         private Control board;
+        private ArenaDashboardLayer dashboard;
 
         public ArenaView(RootController controller, Game game, List<Player> players) {
             this.Location = new Point(0, 0);
             this.Size = new Size(1000, 1000);
             this.Visible = true;
 
-            this.board = new ArenaBoardLayer(controller, game);
+            this.dashboard = new ArenaDashboardLayer();
+            this.Controls.Add(dashboard);
+
+            this.board = new ArenaBoardLayer(dashboard, controller, game);
             this.Controls.Add(board);
 
             this.background = new ArenaBackgroundLayer();

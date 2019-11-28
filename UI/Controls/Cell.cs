@@ -7,12 +7,19 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using UI;
+using BLL;
 
 namespace Minesweeper.Controls
 {
     class Cell : UserControl
     {
-        private bool flagged = false;
+        #region OnPressCell
+        public event EventHandler<IOnPressEventArgs> PressCell;
+        private void OnPressCell(ActionResponse actionResponse)
+        {
+            PressCell?.Invoke(this, new OnPressEventArgs(actionResponse));
+        }
+        #endregion
         private readonly int row;
         private readonly int column;
         private readonly int gameId;
@@ -35,18 +42,6 @@ namespace Minesweeper.Controls
         {
             graphics = e.Graphics;
             graphics.DrawImage(ImageResource.GetUnreveledBlankSquare(this.Size), 0, 0);
-
-            /*
-                        Graphics graphics = e.Graphics;
-                        Pen RedPen = new Pen(Color.Red, 3);
-                        Brush SolidAzureBrush = Brushes.Aqua;
-
-                        Rectangle RectangleArea = new Rectangle(new Point(0,0), this.Size);
-
-                        graphics.FillRectangle(SolidAzureBrush, RectangleArea);
-                        graphics.DrawRectangle(RedPen, RectangleArea);
-            */
-
         }
 
         protected override void OnMouseClick(MouseEventArgs e) {
@@ -57,6 +52,8 @@ namespace Minesweeper.Controls
             var result = controller.PressCell(gameId, column, row);
 
             if (result.ErrorMessage != null) return;
+
+            OnPressCell(result);
 
             if (result.HasMine) {
                 graphics.DrawImage(ImageResource.GetReveledMineSquare(this.Size), 0, 0);
@@ -69,6 +66,24 @@ namespace Minesweeper.Controls
                 graphics.DrawString(result.NearMines.ToString(), arialFont, Brushes.Blue, location);
             }
         }
+    }
 
+    public class OnPressEventArgs : IOnPressEventArgs
+    {
+        private readonly ActionResponse _actionReponse;
+
+        public OnPressEventArgs(ActionResponse testMethod)
+        {
+            _actionReponse = testMethod;
+        }
+        public ActionResponse GetActionResponse()
+        {
+            return _actionReponse;
+        }
+    }
+
+    public interface IOnPressEventArgs
+    {
+        ActionResponse GetActionResponse();
     }
 }
